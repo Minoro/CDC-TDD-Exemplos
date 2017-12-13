@@ -1,5 +1,7 @@
 <?php 
 
+namespace CDC\Loja\RH;
+
 
 class Funcionario{
 	
