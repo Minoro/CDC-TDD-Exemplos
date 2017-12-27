@@ -2,10 +2,13 @@
 
 namespace CDC\Loja\FluxoDeCaixa;
 
-class SAP{
-	
-	public function envia(NotaFiscal $nf){
+use CDC\Loja\FluxoDeCaixa\AcaoAposGerarNotaInterface;
+use CDC\Loja\FluxoDeCaixa\NotaFiscal;
 
+class SAP implements AcaoAposGerarNotaInterface{
+	
+	public function executa(NotaFiscal $nf){
+		return true;
 	}
 	
 }

@@ -9,12 +9,10 @@ use CDC\Loja\FluxoDeCaixa\SAP;
 
 class GeradorDeNotaFiscal{
 
-	private $dao;
-	private $sap;
+	private $acoes;
 
-	public function __construct(NFDao $dao, SAP $sap){
-		$this->dao = $dao;
-		$this->sap = $sap;
+	public function __construct($acoes){
+		$this->acoes = $acoes;
 	}
 	
 	public function gera(Pedido $pedido){
@@ -22,11 +20,11 @@ class GeradorDeNotaFiscal{
 					$pedido->getValorTotal() * 0.94,
 					new \DateTime());
 		
-		if($this->dao->persiste($nf) && $this->sap->envia($nf)){
-			return $nf;
+		foreach ($this->acoes as $acao) {
+			$acao->executa($nf);	
 		}
 
-		return null;
+		return $nf;
 	}
 }
 
