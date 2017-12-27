@@ -2,15 +2,12 @@
 
 namespace CDC\Loja\Produto;
 
-require "./vendor/autoload.php";
-
 use CDC\Loja\Carrinho\CarrinhoDeCompras;
 use CDC\Loja\Produto\MaiorEMenor;
 use CDC\Loja\Produto\Produto;
+use CDC\Loja\Test\TestCase;
 
-use	PHPUnit_Framework_TestCase as PHPUnit;
-
-class MaiorEMenorTest extends PHPUnit{
+class MaiorEMenorTest extends TestCase{
 	
 	public function testOrdemDecrescente(){
 

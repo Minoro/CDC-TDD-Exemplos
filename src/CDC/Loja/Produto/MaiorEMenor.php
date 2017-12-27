@@ -11,11 +11,11 @@ class MaiorEMenor{
 
 	public function encontra(CarrinhoDeCompras $carrinho){
 		foreach ($carrinho->getProdutos() as $produto) {
-			if(empty($this->menor) || $produto->getValor() < $this->menor->getValor()){
+			if(empty($this->menor) || $produto->getValorUnitario() < $this->menor->getValorUnitario()){
 				$this->menor = $produto;
 			}
 
-			if(empty($this->maior) || $produto->getValor() > $this->maior->getValor()){
+			if(empty($this->maior) || $produto->getValorUnitario() > $this->maior->getValorUnitario()){
 				$this->maior = $produto;
 			}
 		}
