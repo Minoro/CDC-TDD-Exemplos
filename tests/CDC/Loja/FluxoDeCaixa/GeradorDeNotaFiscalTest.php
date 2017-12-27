@@ -2,8 +2,9 @@
 
 namespace CDC\Loja\FluxoDeCaixa;
 
-use \Mockery;
+use CDC\Exemplos\RelogioDoSistema;
 use CDC\Loja\Test\TestCase;
+use \Mockery;
 
 
 class GeradorDeNotaFiscalTest extends TestCase{
@@ -13,7 +14,7 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$dao = Mockery::mock("CDC\Loja\FluxoDeCaixa\NFDao");
 		$dao->shouldReceive("executa")->andReturn(true);
 		
-		$gerador = new GeradorDeNotaFiscal([$dao]);
+		$gerador = new GeradorDeNotaFiscal([$dao], new RelogioDoSistema());
 		$pedido = new Pedido("Andre", 1000, 1);
 
 		$nf = $gerador->gera($pedido);
@@ -27,7 +28,7 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$sap = Mockery::mock("CDC\Loja\FluxoDeCaixa\SAP");
 		$sap->shouldReceive("executa")->andReturn(true);
 
-		$gerador = new GeradorDeNotaFiscal([$sap]);
+		$gerador = new GeradorDeNotaFiscal([$sap], new RelogioDoSistema());
 		$pedido	= new Pedido("Andre", 1000, 1);
 		$nf	= $gerador->gera($pedido);
 		
@@ -43,7 +44,7 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$acao2 =  Mockery::mock("CDC\Loja\FluxoDeCaixa\AcaoAposGerarNotaInterface");
 		$acao2->shouldReceive("executa")->andReturn(true);
 
-		$gerador = new GeradorDeNotaFiscal([$acao1, $acao2]);
+		$gerador = new GeradorDeNotaFiscal([$acao1, $acao2], new RelogioDoSistema());
 		$pedido = new Pedido('André', 1000, 1);
 
 		$nf = $gerador->gera($pedido);

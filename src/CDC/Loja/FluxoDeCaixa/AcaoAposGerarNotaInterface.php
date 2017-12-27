@@ -2,6 +2,7 @@
 
 namespace CDC\Loja\FluxoDeCaixa;
 
+use CDC\Loja\FluxoDeCaixa\AcaoAposGerarNotaInterface;
 use CDC\Loja\FluxoDeCaixa\NotaFiscal;
 
 interface AcaoAposGerarNotaInterface {
