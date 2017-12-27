@@ -14,13 +14,16 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$dao = Mockery::mock("CDC\Loja\FluxoDeCaixa\NFDao");
 		$dao->shouldReceive("executa")->andReturn(true);
 		
-		$gerador = new GeradorDeNotaFiscal([$dao], new RelogioDoSistema());
+		$tabela	= Mockery::mock("CDC\Loja\Tributos\TabelaInterface");
+		$tabela->shouldReceive("paraValor")->with(1000.0)->andReturn(0.2);
+
+		$gerador = new GeradorDeNotaFiscal([$dao], new RelogioDoSistema(), $tabela);
 		$pedido = new Pedido("Andre", 1000, 1);
 
 		$nf = $gerador->gera($pedido);
 
 		$this->assertTrue($dao->executa($nf));
-		$this->assertEquals(1000 * 0.94, $nf->getValor(), null, 0.00001);
+		$this->assertEquals(1000 * 0.8, $nf->getValor(), null, 0.00001);
 
 	}
 
@@ -28,12 +31,15 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$sap = Mockery::mock("CDC\Loja\FluxoDeCaixa\SAP");
 		$sap->shouldReceive("executa")->andReturn(true);
 
-		$gerador = new GeradorDeNotaFiscal([$sap], new RelogioDoSistema());
+		$tabela	= Mockery::mock("CDC\Loja\Tributos\TabelaInterface");
+		$tabela->shouldReceive("paraValor")->with(1000.0)->andReturn(0.2);
+
+		$gerador = new GeradorDeNotaFiscal([$sap], new RelogioDoSistema(), $tabela);
 		$pedido	= new Pedido("Andre", 1000, 1);
 		$nf	= $gerador->gera($pedido);
 		
 		$this->assertTrue($sap->executa($nf));
-		$this->assertEquals(1000 * 0.94, $nf->getValor(), null, 0.00001);
+		$this->assertEquals(1000 * 0.8, $nf->getValor(), null, 0.00001);
 
 	}
  
@@ -44,7 +50,10 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$acao2 =  Mockery::mock("CDC\Loja\FluxoDeCaixa\AcaoAposGerarNotaInterface");
 		$acao2->shouldReceive("executa")->andReturn(true);
 
-		$gerador = new GeradorDeNotaFiscal([$acao1, $acao2], new RelogioDoSistema());
+		$tabela	= Mockery::mock("CDC\Loja\Tributos\TabelaInterface");
+		$tabela->shouldReceive("paraValor")->with(1000.0)->andReturn(0.2);
+
+		$gerador = new GeradorDeNotaFiscal([$acao1, $acao2], new RelogioDoSistema(), $tabela);
 		$pedido = new Pedido('André', 1000, 1);
 
 		$nf = $gerador->gera($pedido);
@@ -54,6 +63,24 @@ class GeradorDeNotaFiscalTest extends TestCase{
 		$this->assertNotNull($nf);
 
 		$this->assertInstanceOf("CDC\Loja\FluxoDeCaixa\NotaFiscal", $nf);
+	}
+
+	public function testDeveConsultarATabelaParaCalcularValor(){
+		//	mockando	uma	tabela,	que	ainda	nem	existe
+		$tabela	=	Mockery::mock("CDC\Loja\Tributos\TabelaInterface");
+		
+		//	definindo	o	futuro	comportamento	"paraValor",
+		//	que	deve	retornar	0.2	caso	valor	seja	1000.0
+		$tabela->shouldReceive("paraValor")->with(1000.0)->andReturn(0.2);
+
+		$gerador = new GeradorDeNotaFiscal(array(), new RelogioDoSistema(), $tabela);
+		$pedido	= new Pedido("Andre", 1000.0, 1);
+		$nf	= $gerador->gera($pedido);
+
+		//garantindo	que	a	tabela	foi	consultada
+		$this->assertEquals(1000 * 0.8,	 $nf->getValor(), null, 0.00001);
+
+
 	}
 
 
